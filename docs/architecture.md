@@ -48,14 +48,14 @@ kawika/
 ├── server/                 FastAPI + SQLAlchemy + Alembic
 │   ├── app/
 │   │   ├── api/            HTTP layer: routes and dependencies
+│   │   ├── cli/            `kawika` management commands (Typer)
 │   │   ├── core/           Config, middleware, error handling
-│   │   ├── db/             Engine, sessions, declarative base
+│   │   ├── db/             Engine, migrations, maintenance, seeders
 │   │   ├── models/         ORM tables
 │   │   ├── schemas/        Pydantic request/response bodies
 │   │   ├── security/       Passwords, sessions, CSRF, rate limiting
 │   │   └── services/       Business rules
 │   ├── migrations/         Alembic revisions
-│   ├── scripts/            Operational scripts
 │   └── tests/              pytest (api, unit, migrations)
 ├── docs/                   This documentation
 └── commit-messages/        Local commit message drafts (git-ignored)
@@ -69,7 +69,7 @@ Code only depends "downwards". Nothing imports from a layer above it.
 
 | Client | Server |
 | ------ | ------ |
-| `app` → `pages` → `features` → `shared` | `api` → `services` → `security` / `models` → `db` / `core` |
+| `app` → `pages` → `features` → `shared` | `api` / `cli` → `services` → `security` / `models` → `db` / `core` |
 
 - A feature never imports another feature's internals. Pages and layouts are where features meet.
 - `shared` knows nothing about Kawika's domain (no users, quests, or islands).

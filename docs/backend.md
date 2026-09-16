@@ -4,6 +4,16 @@ Python 3.12, FastAPI, SQLAlchemy 2.0, PostgreSQL (psycopg 3), Alembic, Argon2.
 
 Entry point: `app/main.py` builds the app with `create_app()`. Run it with `fastapi dev app/main.py`.
 
+Management commands: `kawika db ...` (see [Management CLI](cli.md)).
+
+## `app/cli/` — management commands
+
+| Module | Responsibility |
+| ------ | -------------- |
+| `main.py` | Root Typer app registered as the `kawika` console script (`pyproject.toml`). |
+| `db.py` | `migrate`, `fresh`, `seed`, `status`, `rollback`, `reset`, `make-migration`, and `check`, with confirmation and production guards. |
+| `output.py` | Consistent console messages. |
+
 ## `app/core/` — cross-cutting setup
 
 | Module | Responsibility |
@@ -17,7 +27,11 @@ Entry point: `app/main.py` builds the app with `create_app()`. Run it with `fast
 | Module | Responsibility |
 | ------ | -------------- |
 | `base.py` | `Base` with a naming convention, so constraint names are stable across migrations. |
-| `session.py` | Engine (pool pre-ping, timeouts) and `get_db()`, a request-scoped session dependency. Uses `TEST_DATABASE_URL` when `APP_ENV=test`. |
+| `session.py` | Engine (pool pre-ping, timeouts), `get_db()` request-scoped sessions, and `resolve_database_url()` (default or test database). |
+| `migrations.py` | Alembic config built from settings, migration state (applied/pending), and upgrade/downgrade/revision/check helpers. |
+| `maintenance.py` | Drop every schema object in one transaction with a lock timeout, table row counts, and password-free URL display. |
+| `seeders/` | `Seeder` base class, the ordered `SEEDERS` registry, and the demo-account and learner seeders. |
+| `factories.py` | Deterministic learner profiles with common Filipino names. |
 
 ## `app/models/` — tables
 
@@ -78,7 +92,6 @@ Error codes: `invalid_input`, `weak_password`, `account_conflict`, `invalid_cred
 | Path | Purpose |
 | ---- | ------- |
 | `migrations/` | Alembic environment and revisions. |
-| `scripts/reset_test_db.py` | Migrates and wipes the test database. Refuses anything not named `*_test`. |
 | `tests/` | See [Testing](testing.md). |
-| `pyproject.toml` | Project metadata and pytest configuration. |
+| `pyproject.toml` | Project metadata, the `kawika` console script, and pytest configuration. |
 | `requirements.txt` / `requirements-dev.txt` | Pinned runtime and development dependencies. |

@@ -7,14 +7,20 @@ from sqlalchemy import engine_from_config, pool
 
 import app.models  # noqa: F401  (registers every table on Base.metadata)
 from app.db.base import Base
-from app.db.session import _database_url
+from app.db.session import resolve_database_url
 
 config = context.config
-if config.config_file_name is not None:
+
+# Programmatic callers (the `kawika` CLI, tests) pass their own URL and may opt
+# out of Alembic's logging setup so it does not override theirs.
+if config.config_file_name is not None and config.attributes.get("configure_logger", True):
     fileConfig(config.config_file_name, disable_existing_loggers=False)
 
-# `-x url=...` overrides the configured database (used by the test suite).
-url = context.get_x_argument(as_dictionary=True).get("url") or _database_url()
+url = (
+    config.attributes.get("database_url")
+    or context.get_x_argument(as_dictionary=True).get("url")
+    or resolve_database_url()
+)
 config.set_main_option("sqlalchemy.url", url.replace("%", "%%"))
 
 target_metadata = Base.metadata

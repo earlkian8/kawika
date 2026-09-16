@@ -23,6 +23,8 @@ Tests run against **PostgreSQL** (`TEST_DATABASE_URL`) and refuse any database w
 | `tests/unit/test_passwords.py` | Hash round trip, corrupt hashes, policy messages, passphrases, k-anonymity request, offline fail-open |
 | `tests/unit/test_rate_limit.py` | Limits, sliding window, independent keys |
 | `tests/test_migrations.py` | Models match migrations (`alembic check`), clean downgrade and upgrade |
+| `tests/cli/test_db_commands.py` | `status` (no password shown), idempotent `migrate`, `--to`, `rollback`, `reset`, `make-migration` (refuses no-op, `--empty` file), `check`; `fresh` removes unknown tables, views, and enums; `fresh --seed`; prompt required without a terminal, decline and accept; idempotent and selective `seed`, growing learners, unknown seeder, count bounds, pending migrations; demo account can log in; production refusal before connecting; test-database name guard; unreachable database message |
+| `tests/unit/test_seed_data.py` | Filipino name slugs; 1,000 learner profiles valid, unique, and reproducible; seed passwords pass the policy; URL display hides the password; `fresh` stops on a lock without dropping anything |
 
 ## Client unit tests
 
@@ -37,7 +39,7 @@ Tests run against **PostgreSQL** (`TEST_DATABASE_URL`) and refuse any database w
 
 ## End-to-end UAT suite
 
-`npm run test:e2e` starts an **isolated stack**: the API on port 8010 against `kawika_test` (reset first via `scripts/reset_test_db.py`), and Vite on port 5180. Your dev servers and dev database are untouched. Every scenario runs on a **desktop** (1440×900) and a **mobile** (Pixel 7) browser.
+`npm run test:e2e` starts an **isolated stack**: the API on port 8010 against `kawika_test` (rebuilt first with `kawika db --database test fresh --force`), and Vite on port 5180. Your dev servers and dev database are untouched. Every scenario runs on a **desktop** (1440×900) and a **mobile** (Pixel 7) browser.
 
 Every test also fails automatically on an uncaught JavaScript error, an unexpected console error, or any `alert()`/`confirm()` dialog (which would signal injected script).
 

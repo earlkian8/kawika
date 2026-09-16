@@ -10,5 +10,6 @@ Start with **About** if you are new to the project, then **Setup** to run it.
 | [Backend](backend.md) | Every server module and what it is responsible for |
 | [Frontend](frontend.md) | Every client module, routing, and styling approach |
 | [Database](database.md) | Schema, constraints, and working with Alembic migrations |
+| [Management CLI](cli.md) | `kawika db migrate`, `fresh`, `seed`, and friends |
 | [Security](security.md) | Authentication design and the standards it follows |
 | [Testing](testing.md) | Test layers, how to run them, and the UAT scenarios covered |

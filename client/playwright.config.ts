@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test'
 /**
  * End-to-end (UAT) suite. Boots an isolated stack so it never touches your
  * dev servers or data:
- *   API  on :8010 against TEST_DATABASE_URL (reset before the run)
+ *   API  on :8010 against TEST_DATABASE_URL (rebuilt with `kawika db fresh` first)
  *   Web  on :5180, proxying /api to that API
  */
 const API_PORT = 8010
@@ -33,7 +33,7 @@ export default defineConfig({
     {
       name: 'api',
       cwd: '../server',
-      command: `.venv/bin/python -m scripts.reset_test_db && .venv/bin/fastapi run app/main.py --host 127.0.0.1 --port ${API_PORT}`,
+      command: `.venv/bin/python -m app.cli db --database test fresh --force && .venv/bin/fastapi run app/main.py --host 127.0.0.1 --port ${API_PORT}`,
       url: `http://127.0.0.1:${API_PORT}/api/health`,
       reuseExistingServer: false,
       timeout: 60_000,

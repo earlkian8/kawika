@@ -43,9 +43,8 @@ kawika/
 │       ├── features/    # auth, journey, progress
 │       └── shared/      # API client, UI controls, brand, styles
 ├── server/              # FastAPI backend
-│   ├── app/             # api, core, db, models, schemas, security, services
+│   ├── app/             # api, cli, core, db, models, schemas, security, services
 │   ├── migrations/      # Alembic revisions
-│   ├── scripts/
 │   └── tests/
 ├── docs/                # Project documentation
 └── README.md
@@ -65,7 +64,7 @@ cd server
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
 cp .env.example .env          # fill in DATABASE_URL, TEST_DATABASE_URL, SECRET_KEY
-alembic upgrade head
+kawika db migrate --seed      # tables + demo login (demo / tara matuto ng senyas)
 fastapi dev app/main.py       # http://localhost:8000
 
 # 3. Frontend (second terminal)
@@ -85,6 +84,7 @@ Full instructions and troubleshooting: **[docs/setup.md](docs/setup.md)**.
 | [Architecture](docs/architecture.md) | Structure and conventions |
 | [Backend](docs/backend.md) / [Frontend](docs/frontend.md) | Module reference |
 | [Database](docs/database.md) | Schema and migrations |
+| [Management CLI](docs/cli.md) | `kawika db migrate / fresh / seed` |
 | [Security](docs/security.md) | Authentication design |
 | [Testing](docs/testing.md) | Test layers and UAT scenarios |
 
@@ -98,7 +98,10 @@ Full instructions and troubleshooting: **[docs/setup.md](docs/setup.md)**.
 | `client/` | `npm test` | Unit tests |
 | `client/` | `npm run test:e2e` | End-to-end UAT suite (starts its own API and web server) |
 | `server/` | `fastapi dev app/main.py` | API with auto-reload |
-| `server/` | `alembic upgrade head` | Apply database migrations |
+| `server/` | `kawika db migrate` | Apply database migrations |
+| `server/` | `kawika db fresh --seed` | Wipe, rebuild, and add demo data |
+| `server/` | `kawika db seed` | Add demo data (safe to repeat) |
+| `server/` | `kawika db status` | Migration state and row counts |
 | `server/` | `pytest` | API, unit, and migration tests |
 
 ## Contributing

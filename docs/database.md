@@ -53,21 +53,24 @@ The database enforces these rules as a backstop, even though the API validates f
 
 ## Migrations
 
-Run these from `server/` with the virtual environment active.
+Use the `kawika` CLI from `server/` with the virtual environment active. The full reference is in [Management CLI](cli.md).
 
 ```bash
-alembic upgrade head                              # apply all migrations
-alembic downgrade -1                              # roll back one
-alembic revision --autogenerate -m "add badges"   # after changing a model
-alembic check                                     # fails if models and migrations differ
-alembic history                                   # list revisions
+kawika db migrate                        # apply all migrations
+kawika db status                         # applied / pending + row counts
+kawika db rollback                       # undo the last one
+kawika db make-migration "add badges"    # after changing a model
+kawika db check                          # fails if models and migrations differ
+kawika db fresh --seed                   # wipe everything, rebuild, add demo data
 ```
+
+Plain Alembic (`alembic upgrade head`, `alembic history`) still works. The CLI wraps the same configuration.
 
 The workflow for a schema change:
 
 1. Edit or add a model in `app/models/` (export new models from `app/models/__init__.py`).
-2. Run `alembic revision --autogenerate -m "..."` and **read the generated file**. Autogenerate misses some changes, such as renames and server defaults.
-3. Run `alembic upgrade head`, then `pytest`. The migration tests downgrade to base, upgrade again, and run `alembic check`.
+2. Run `kawika db make-migration "..."` and **read the generated file**. Autogenerate misses some changes, such as renames and server defaults.
+3. Run `kawika db migrate`, then `pytest`. The migration tests downgrade to base, upgrade again, and check that models match.
 
 Constraint names come from the naming convention in `app/db/base.py`, so they stay identical between environments.
 

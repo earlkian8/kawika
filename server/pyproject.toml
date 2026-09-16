@@ -1,8 +1,19 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "kawika-server"
 version = "0.1.0"
 description = "Kawika API: FastAPI backend for a gamified Filipino Sign Language platform."
 requires-python = ">=3.12"
+
+[project.scripts]
+# `kawika db migrate`, `kawika db fresh --seed`, ... (see docs/cli.md)
+kawika = "app.cli.main:run"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

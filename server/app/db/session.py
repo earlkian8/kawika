@@ -1,23 +1,29 @@
 """Database engine and request-scoped sessions."""
 
 from collections.abc import Iterator
+from typing import Literal
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import settings
 
+DatabaseTarget = Literal["default", "test"]
 
-def _database_url() -> str:
-    if settings.app_env == "test":
+
+def resolve_database_url(target: DatabaseTarget | None = None) -> str:
+    """URL for a database target. Without a target, follows APP_ENV."""
+    if target is None:
+        target = "test" if settings.app_env == "test" else "default"
+    if target == "test":
         if not settings.test_database_url:
-            raise RuntimeError("TEST_DATABASE_URL must be set when APP_ENV=test.")
+            raise RuntimeError("TEST_DATABASE_URL must be set to use the test database.")
         return settings.test_database_url
     return settings.database_url
 
 
 engine = create_engine(
-    _database_url(),
+    resolve_database_url(),
     pool_pre_ping=True,
     pool_size=5,
     max_overflow=10,

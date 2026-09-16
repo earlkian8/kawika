@@ -39,9 +39,13 @@ source .venv/bin/activate          # Windows: .venv\Scripts\Activate.ps1
 pip install -r requirements-dev.txt
 
 cp .env.example .env               # then edit the values below
-alembic upgrade head               # create tables in the dev database
+kawika db migrate --seed           # create tables and demo accounts
 fastapi dev app/main.py            # http://localhost:8000
 ```
+
+`pip install -r requirements-dev.txt` also installs the `kawika` management CLI. Wipe and rebuild the database any time with `kawika db fresh --seed`. See [Management CLI](cli.md).
+
+Demo login after seeding: username `demo`, password `tara matuto ng senyas`.
 
 - Health check: http://localhost:8000/api/health (also confirms the database connection)
 - Interactive API docs: http://localhost:8000/docs (disabled in production)
@@ -92,7 +96,7 @@ The client needs no `.env` in development. Vite proxies `/api` to `http://localh
 | 1 | `server/` | `source .venv/bin/activate && fastapi dev app/main.py` |
 | 2 | `client/` | `npm run dev` |
 
-Open http://localhost:5173, create an account, and you land on the home journey.
+Open http://localhost:5173, create an account (or log in as `demo`), and you land on the home journey.
 
 ## 6. Production notes
 
@@ -100,7 +104,7 @@ Open http://localhost:5173, create an account, and you land on the home journey.
 - Copy the security headers from `client/vite.config.ts` (`securityHeaders`) into that web server.
 - Run uvicorn with `--proxy-headers --forwarded-allow-ips=<proxy ip>` so rate limiting sees real client IPs.
 - Rate limits are in memory. Before running more than one API worker, move them to a shared store such as Redis.
-- Run `alembic upgrade head` as part of every deploy.
+- Run `kawika db migrate` as part of every deploy. Never `fresh` or `seed` production: the CLI refuses without `--force`, and demo seeders never run there.
 
 ## Troubleshooting
 
@@ -109,7 +113,9 @@ Open http://localhost:5173, create an account, and you land on the home journey.
 | `role "earl" does not exist` from `psql` | Connect as the app role: `psql -h 127.0.0.1 -U kawika -d kawika` |
 | `password authentication failed for user "kawika"` | The password in `DATABASE_URL` does not match the role. Reset it with `sudo -u postgres psql -c "ALTER ROLE kawika PASSWORD '...'"`. |
 | `database_url Field required` on startup | `server/.env` is missing or has no `DATABASE_URL`. |
-| `relation "users" does not exist` | Run `alembic upgrade head` in `server/`. |
+| `relation "users" does not exist` | Run `kawika db migrate` in `server/`. |
+| `kawika: command not found` | Activate the virtual environment and run `pip install -r requirements-dev.txt` (or use `python -m app.cli`). |
+| `fresh` says tables are locked | Stop running API servers (and open `psql` sessions), then retry. |
 | `fastapi: command not found` | Activate the virtual environment first. |
 | Port 5173 or 8000 already in use | Stop the other process, or use `npm run dev -- --port 3000` / `fastapi dev app/main.py --port 8001`. |
 | Login returns 403 "security token expired" | The API's `SECRET_KEY` changed. Refresh the page to get a new token. |

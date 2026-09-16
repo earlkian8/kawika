@@ -12,20 +12,16 @@ os.environ.update(
     CLIENT_ORIGINS="http://testserver",
 )
 
-from pathlib import Path  # noqa: E402
-
 import pytest  # noqa: E402
 from alembic import command  # noqa: E402
-from alembic.config import Config  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 from sqlalchemy import text  # noqa: E402
 
 from app.core.config import settings  # noqa: E402
+from app.db.migrations import alembic_config as build_alembic_config  # noqa: E402
 from app.db.session import SessionLocal, engine  # noqa: E402
 from app.main import app  # noqa: E402
 from app.security.rate_limit import ALL_LIMITERS  # noqa: E402
-
-SERVER_DIR = Path(__file__).resolve().parents[1]
 
 VALID_USER = {
     "display_name": "Maria Clara",
@@ -35,10 +31,8 @@ VALID_USER = {
 }
 
 
-def alembic_config() -> Config:
-    config = Config(str(SERVER_DIR / "alembic.ini"))
-    config.set_main_option("script_location", str(SERVER_DIR / "migrations"))
-    return config
+def alembic_config():
+    return build_alembic_config(engine.url.render_as_string(hide_password=False), quiet=True)
 
 
 @pytest.fixture(scope="session", autouse=True)
