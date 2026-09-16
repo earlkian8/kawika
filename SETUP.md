@@ -75,13 +75,12 @@ pip install -r requirements.txt
 
 ### Run the API
 
-> The API entrypoint has not been created yet. Once `server/main.py` exists with a FastAPI `app`, run:
-
 ```bash
 fastapi dev main.py
 ```
 
 - API: **http://localhost:8000**
+- Health check: **http://localhost:8000/api/health**
 - Interactive docs (Swagger UI): **http://localhost:8000/docs**
 
 ### Adding a new Python package
@@ -95,9 +94,17 @@ pip freeze > requirements.txt   # or add the package to requirements.txt by hand
 
 Secrets and machine-specific settings go in a `.env` file, which is git-ignored. Never commit real credentials.
 
+Copy the example file to get started:
+
 ```bash
-# server/.env (example)
+cp server/.env.example server/.env
+```
+
+```bash
+# server/.env
 APP_ENV=development
+# Comma-separated list of frontend origins allowed to call the API
+CLIENT_ORIGINS=http://localhost:5173
 ```
 
 For the client, Vite only exposes variables prefixed with `VITE_`:
@@ -124,5 +131,5 @@ Use two terminals:
 | `fastapi: command not found` | Activate the virtual environment first, then reinstall with `pip install -r requirements.txt` |
 | PowerShell blocks `Activate.ps1` | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once |
 | Port 5173 or 8000 already in use | Stop the other process, or run `npm run dev -- --port 3000` / `fastapi dev main.py --port 8001` |
-| Browser shows CORS errors when calling the API | Add `CORSMiddleware` to the FastAPI app allowing `http://localhost:5173` |
+| Browser shows CORS errors when calling the API | Add your frontend's URL to `CLIENT_ORIGINS` in `server/.env` and restart the API |
 | `npm install` errors after switching Node versions | Delete `client/node_modules` and run `npm install` again |
