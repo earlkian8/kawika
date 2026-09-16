@@ -7,7 +7,7 @@ source .venv/bin/activate
 pip install -r requirements-dev.txt   # dependencies + the `kawika` CLI
 kawika db migrate --seed              # tables + demo data
 fastapi dev app/main.py               # http://localhost:8000, docs at /docs
-pytest                                # uses TEST_DATABASE_URL
+pytest                                # uses TEST_DATABASE_URL (a *_test database)
 ```
 
 Clean slate any time: `kawika db fresh --seed`. All commands: `kawika db --help`.
