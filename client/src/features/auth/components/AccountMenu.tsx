@@ -2,12 +2,15 @@ import { AnimatePresence, motion } from 'motion/react'
 import { LogOut, MonitorSmartphone } from 'lucide-react'
 import { useCallback, useId, useRef, useState } from 'react'
 import { useAuth } from '@/features/auth/context/auth-context'
+import { authToasts } from '@/features/auth/lib/auth-toasts'
 import { useDismiss } from '@/shared/hooks/use-dismiss'
+import { useToast } from '@/shared/ui/toast/toast-context'
 import '@/features/auth/styles/account-menu.css'
 
 /** Avatar button in the top bar that reveals account details and sign-out actions. */
 export function AccountMenu() {
   const { user, logout } = useAuth()
+  const toast = useToast()
   const [open, setOpen] = useState(false)
   const [pending, setPending] = useState<'one' | 'all' | null>(null)
   const wrapper = useRef<HTMLDivElement>(null)
@@ -24,7 +27,15 @@ export function AccountMenu() {
 
   const signOut = async (everywhere: boolean) => {
     setPending(everywhere ? 'all' : 'one')
-    await logout({ everywhere })
+    // Toasts about the signed-in screens make no sense on the login page.
+    toast.dismissAll()
+    try {
+      await logout({ everywhere })
+      toast.show(everywhere ? authToasts.loggedOutEverywhere() : authToasts.loggedOut())
+    } catch {
+      // The local session is cleared either way; say what could not be confirmed.
+      toast.show(authToasts.logoutUnconfirmed())
+    }
   }
 
   return (

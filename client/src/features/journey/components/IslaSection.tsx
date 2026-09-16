@@ -1,8 +1,10 @@
 import { BookOpen } from 'lucide-react'
 import type { RefObject } from 'react'
 import { QuestNode } from '@/features/journey/components/QuestNode'
+import { journeyToasts } from '@/features/journey/lib/journey-toasts'
 import { ROW_HEIGHT, routeGeometry } from '@/features/journey/lib/route-layout'
 import type { Isla } from '@/features/journey/types'
+import { useToast } from '@/shared/ui/toast/toast-context'
 
 type Props = {
   isla: Isla
@@ -14,6 +16,7 @@ type Props = {
 
 /** One island: its banner and the winding route of quests beneath it. */
 export function IslaSection({ isla, startIndex, openId, onToggle, currentRef }: Props) {
+  const toast = useToast()
   const done = isla.quests.filter((q) => q.state === 'done').length
   const locked = isla.quests.every((q) => q.state === 'locked')
   const { points, path } = routeGeometry(isla.quests.length, startIndex)
@@ -31,7 +34,12 @@ export function IslaSection({ isla, startIndex, openId, onToggle, currentRef }: 
           <span className="isla__count" aria-label={`${done} of ${isla.quests.length} quests done`}>
             {done}/{isla.quests.length}
           </span>
-          <button type="button" className="isla__guide" disabled={locked}>
+          <button
+            type="button"
+            className="isla__guide"
+            disabled={locked}
+            onClick={() => toast.show(journeyToasts.guideComingSoon(isla))}
+          >
             <BookOpen size={18} aria-hidden="true" />
             <span>Guide</span>
           </button>

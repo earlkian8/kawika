@@ -6,9 +6,12 @@ import { Button } from '@/shared/ui/Button'
 import { Field } from '@/shared/ui/Field'
 import { PasswordField } from '@/shared/ui/PasswordField'
 import { FormAlert } from '@/features/auth/components/FormAlert'
+import { authToasts } from '@/features/auth/lib/auth-toasts'
+import { useToast } from '@/shared/ui/toast/toast-context'
 
 export function LoginForm() {
   const { login } = useAuth()
+  const toast = useToast()
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
@@ -31,7 +34,8 @@ export function LoginForm() {
 
     setPending(true)
     try {
-      await login({ identifier: identifier.trim(), password, remember })
+      const user = await login({ identifier: identifier.trim(), password, remember })
+      toast.show(authToasts.loggedIn(user))
     } catch (error) {
       const { message, fields, retryAfter } = describeError(error)
       setErrors(fields)

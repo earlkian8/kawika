@@ -2,8 +2,10 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Lock } from 'lucide-react'
 import type { CSSProperties, RefObject } from 'react'
 import { QuestIcon } from '@/features/journey/components/QuestIcon'
+import { journeyToasts } from '@/features/journey/lib/journey-toasts'
 import { KIND_LABEL, ROW_HEIGHT } from '@/features/journey/lib/route-layout'
 import type { Quest } from '@/features/journey/types'
+import { useToast } from '@/shared/ui/toast/toast-context'
 
 type Props = {
   quest: Quest
@@ -16,6 +18,7 @@ type Props = {
 /** A single quest on the route, with its progress ring, callout, and details popover. */
 export function QuestNode({ quest, x, open, onToggle, buttonRef }: Props) {
   const reduce = useReducedMotion()
+  const toast = useToast()
   const popoverId = `quest-${quest.id}-details`
   const isCurrent = quest.state === 'current'
   const ratio = quest.progress ? quest.progress[0] / quest.progress[1] : 0
@@ -96,7 +99,11 @@ export function QuestNode({ quest, x, open, onToggle, buttonRef }: Props) {
                     Lesson {quest.progress[0] + 1} of {quest.progress[1]}
                   </p>
                 )}
-                <button type="button" className="btn quest__start">
+                <button
+                  type="button"
+                  className="btn quest__start"
+                  onClick={() => toast.show(journeyToasts.lessonsComingSoon(quest))}
+                >
                   {quest.state === 'done' ? 'Practice again' : 'Start'}
                   <span className="quest__xp">+{quest.state === 'done' ? Math.ceil(quest.xp / 2) : quest.xp} XP</span>
                 </button>

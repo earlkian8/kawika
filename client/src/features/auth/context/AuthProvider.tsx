@@ -27,12 +27,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const next = await authApi.login(input)
     setUser(next)
     setStatus('authenticated')
+    return next
   }, [])
 
   const register = useCallback(async (input: RegisterInput) => {
     const next = await authApi.register(input)
     setUser(next)
     setStatus('authenticated')
+    return next
   }, [])
 
   const logout = useCallback(async ({ everywhere = false } = {}) => {

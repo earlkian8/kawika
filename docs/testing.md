@@ -45,6 +45,8 @@ Tests run against **PostgreSQL** (`TEST_DATABASE_URL`) and refuse any database w
 | `features/journey/lib/route-layout.test.ts` | Continuous numbering, node rows, sway continuity, a single current quest |
 | `pages/home/greeting.test.ts` | Greeting boundaries |
 | `shared/api/http-client.test.ts` | CSRF header rules, `ApiError` mapping, network failures, non-JSON errors, CSRF refresh and retry |
+| `shared/ui/toast/toast-queue.test.ts` | Tone defaults, errors never auto-dismiss, unique ids, newest first with a cap of 3, same key replaces and moves to top, deduped clicks, dismiss one/all, screen-reader text |
+| `features/auth/lib/auth-toasts.test.ts` | First-name greeting, one shared key for auth toasts, warning tone for unconfirmed logout |
 
 ## End-to-end UAT suite
 
@@ -60,6 +62,7 @@ Every test also fails automatically on an uncaught JavaScript error, an unexpect
 | `home/journey.spec.ts` | Five islands and the current quest; Continue quest scrolls, focuses, and opens; Escape and outside click close; one popover at a time; locked vs completed details; account menu with Escape returning focus; nav current page and "Soon" items; today in the streak week; reduced motion |
 | `quality/responsive.spec.ts` | No horizontal scroll at 320, 375, 414, 768, 1024, 1280, and 1920 px for login, register with errors, and home with a long name, an open quest, and the account menu inside the viewport; mobile bottom nav never covers content |
 | `quality/accessibility.spec.ts` | axe-core WCAG 2.2 AA with no serious or critical violations on login, register with errors, the login error state, and home with an open quest |
+| `app/toasts.spec.ts` | Sign-up celebration that auto-dismisses; login welcome that survives the redirect and is announced; failed login stays inline; logout clears older toasts; log out everywhere; offline logout warning; coming-soon toasts; deduped clicks and newest on top; close button and Escape; hover and focus pause the timer; swipe dismisses and a short drag snaps back; reduced motion still waits; placement below the top bar; long names wrap; axe WCAG 2.2 AA |
 | `quality/resilience.spec.ts` | API down on first load; network failure on submit, then retry; HTML 502 shown as a calm message; slow API (busy button, one request); malformed success payload does not crash |
 
 Reports: `npm run test:e2e:report` opens the HTML report. Traces and screenshots of failures are saved in `client/test-results/`.
@@ -76,3 +79,7 @@ Reports: `npm run test:e2e:report` opens the HTML report. Traces and screenshots
 | Last bottom-nav label clipped at 320 px (fixed nav, invisible to the page-overflow check) | Nav items share the width evenly with truncation, and the responsive test now checks every nav item's bounds |
 | Repeated runs locked the shared "nobody@example.com" test identifier (the server behaved correctly) | Throttle-sensitive tests use a unique identifier per run |
 | Icon-only side nav (921–1240 px) hid its labels with `display: none`, leaving links without accessible names | Labels are visually hidden instead, so screen readers still announce them |
+| A second `role="alert"` (toast announcer) competed with inline form alerts | The toast announcer uses `aria-live="assertive"` without the alert role |
+| Toasts about signed-in screens followed the learner onto the login page after logout | Logging out clears existing toasts before the goodbye toast |
+| A failed logout request was an unhandled promise rejection | The account menu catches it and shows a "Logged out on this device" warning |
+| Duplicate React keys inside the toast medallion (caught by the console guard) | Icon, burst, and timer keys are namespaced |

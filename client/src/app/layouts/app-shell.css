@@ -4,6 +4,7 @@
    (and the bottom nav on small screens). WCAG 2.2 "Focus Not Obscured". */
 html:has(.shell) {
   scroll-padding-block: 88px 24px;
+  --toast-top: 84px; /* below the sticky top bar */
 }
 
 .shell {
@@ -178,6 +179,7 @@ html:has(.shell) {
 @media (max-width: 920px) {
   html:has(.shell) {
     scroll-padding-block: 80px 96px;
+    --toast-top: 72px;
   }
 
   .shell {

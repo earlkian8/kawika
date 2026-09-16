@@ -6,7 +6,7 @@ React 19, TypeScript, Vite 8, React Router 8, Motion, Lucide icons, Zod (mini). 
 
 | Module | Responsibility |
 | ------ | -------------- |
-| `App.tsx` | Wraps the router in `AuthProvider`. |
+| `App.tsx` | Wraps the router in `ToastProvider` (outermost, so toasts survive navigation) and `AuthProvider`. |
 | `router.tsx` | Route table. Guest routes (`/login`, `/register`) share `AuthPage` as a layout. Signed-in routes render inside `AppShell`. Signed-in code is lazy-loaded. |
 | `layouts/AppShell.tsx` | Signed-in chrome: side/bottom navigation, top bar (stats, account menu), skip link, and `<Outlet />`. |
 
@@ -39,11 +39,12 @@ React 19, TypeScript, Vite 8, React Router 8, Motion, Lucide icons, Zod (mini). 
 | `components/RegisterForm.tsx` | Sign-up with client validation, server field errors, and the password meter. |
 | `components/PasswordMeter.tsx` | Live strength feedback toward the 15-character minimum. |
 | `components/FormAlert.tsx` | Announced form-level error banner. |
-| `components/AccountMenu.tsx` | Account details, "Log out", and "Log out on all devices". |
+| `components/AccountMenu.tsx` | Account details, "Log out", and "Log out on all devices". Clears older toasts, then confirms the logout or warns if the server could not be reached. |
 | `hooks/use-countdown.ts` | Ticking seconds for rate-limit lockouts. |
 | `lib/password-strength.ts` | Mirrors the server's length and context rules for instant feedback. |
 | `lib/safe-redirect.ts` | Allows only in-app post-login destinations (no open redirects). |
 | `lib/auth-errors.ts` | Maps thrown errors to messages, field errors, and retry delays. |
+| `lib/auth-toasts.ts` | Toast messages for log in, sign up, log out, log out everywhere, and unconfirmed logout. |
 
 ### `journey`
 
@@ -54,6 +55,7 @@ React 19, TypeScript, Vite 8, React Router 8, Motion, Lucide icons, Zod (mini). 
 | `components/QuestNode.tsx` | Quest button, progress ring, "Simulan" callout, and details popover. |
 | `components/QuestIcon.tsx`, `components/IslaCrossing.tsx` | Icon per quest type, sea crossing between islands. |
 | `lib/route-layout.ts` | Node positions and the SVG path geometry. |
+| `lib/journey-toasts.ts` | "Coming soon" toasts for quest Start buttons and island guides. |
 | `data/islands.ts`, `types.ts` | Mock islands and quests (to be replaced by API data). |
 
 ### `progress`
@@ -74,7 +76,41 @@ React 19, TypeScript, Vite 8, React Router 8, Motion, Lucide icons, Zod (mini). 
 | `ui/Button.tsx`, `ui/Field.tsx`, `ui/PasswordField.tsx`, `ui/Splash.tsx` | Accessible form controls and the loading splash. |
 | `brand/KawikaMark.tsx`, `brand/Banderitas.tsx` | Logo mark, wordmark, and the fiesta bunting. |
 | `hooks/use-dismiss.ts` | Close on Escape or an outside click (menus, popovers). |
+| `ui/toast/` | Toast system: `ToastProvider` (queue and live regions), `Toaster` (stack and pausing), `ToastCard` (animation, timer, swipe), `toast-queue.ts` (pure rules), `useToast()`. |
 | `styles/tokens.css`, `styles/base.css` | Design tokens and element defaults. |
+
+## Toasts
+
+Short confirmations that blend into the game UI: a white card with a coloured 3D bottom edge, dropping in from the top with the same spring as the banderitas.
+
+```tsx
+const toast = useToast()
+toast.show({ tone: 'success', icon: 'wave', title: 'Maligayang pagbabalik, Juan!', description: '…', key: 'auth' })
+toast.dismissAll()
+```
+
+| Tone | Use for | Default duration |
+| ---- | ------- | ---------------- |
+| `success` | Something the learner did worked | 4.5 s |
+| `info` | Neutral news, "coming soon" | 4.5 s |
+| `celebrate` | Milestones (account created); adds a bunting burst | 6 s |
+| `warning` | Done, with a caveat | 8 s |
+| `error` | Something failed and needs attention | Stays until dismissed |
+
+Icons: `check`, `wave` (animated waving hand), `party`, `sparkles`, `logout`, `alert`.
+
+Rules:
+- **Stacking:** at most 3 toasts, newest on top.
+- **Keys:** a toast with the same `key` (defaults to the title) replaces the old one and moves to the top, so repeated clicks never stack. All auth toasts share the `auth` key.
+- **Where they sit:** top-centre, below the sticky top bar on signed-in screens (`--toast-top` in `app-shell.css`).
+- **Dismissing:** close button, Escape while focused, or a swipe sideways.
+- **Timing:** timers pause while hovered, focused, or when the tab is hidden (WCAG 2.2.1). The drain bar is visual only and hidden with reduced motion; timing stays the same.
+- **Screen readers:** always-mounted live regions announce toasts (`polite`, or `assertive` for errors) without moving focus (WCAG 4.1.3).
+- **Form errors stay inline:** failed logins and validation keep using the form's own alert.
+
+Current toasts:
+- **Auth:** log in, sign up, log out, log out everywhere, logout while offline
+- **Journey:** quest Start and island Guide buttons, until lessons exist
 
 ## Design system
 

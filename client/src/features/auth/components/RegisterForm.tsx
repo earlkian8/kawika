@@ -6,11 +6,14 @@ import { Button } from '@/shared/ui/Button'
 import { Field } from '@/shared/ui/Field'
 import { PasswordField } from '@/shared/ui/PasswordField'
 import { FormAlert } from '@/features/auth/components/FormAlert'
+import { authToasts } from '@/features/auth/lib/auth-toasts'
+import { useToast } from '@/shared/ui/toast/toast-context'
 import { PasswordMeter } from '@/features/auth/components/PasswordMeter'
 import { MIN_PASSWORD_LENGTH } from '@/features/auth/lib/password-strength'
 
 export function RegisterForm() {
   const { register } = useAuth()
+  const toast = useToast()
   const [values, setValues] = useState({ display_name: '', username: '', email: '', password: '' })
   const [errors, setErrors] = useState<FieldErrors>({})
   const [formError, setFormError] = useState<string | null>(null)
@@ -53,12 +56,13 @@ export function RegisterForm() {
 
     setPending(true)
     try {
-      await register({
+      const user = await register({
         display_name: values.display_name.trim(),
         username: values.username.trim(),
         email: values.email.trim(),
         password: values.password,
       })
+      toast.show(authToasts.registered(user))
     } catch (error) {
       const { message, fields, retryAfter } = describeError(error)
       setErrors(fields)
