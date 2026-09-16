@@ -62,14 +62,14 @@ Kawika is designed to work well on the devices Filipinos actually use — afford
 
 ## Roadmap
 
-| Phase | Focus |
-| ----- | ----- |
-| **0 — Foundation** | Project scaffold (React + FastAPI), design system, core data models |
-| **1 — MVP** | User accounts, first set of micro quests (greetings, alphabet, numbers), XP and streaks |
-| **2 — Engagement** | Journey map, badges, sign library, review mode for weak signs |
-| **3 — Culture** | Scenario-based challenges (sari-sari store, jeepney, fiesta), community-reviewed content |
-| **4 — Reach** | Offline PWA support, performance for low-end devices, educator/classroom tools |
-| **Future** | Exploring camera-based sign practice feedback |
+| Phase | Focus | Status |
+| ----- | ----- | ------ |
+| **0 — Foundation** | Project scaffold (React + FastAPI), design system, core data models | Done: PostgreSQL, migrations, management CLI, design system, test suites |
+| **1 — MVP** | User accounts, first set of micro quests (greetings, alphabet, numbers), XP and streaks | In progress: accounts and sessions done; quests, XP, and streaks next |
+| **2 — Engagement** | Journey map, badges, sign library, review mode for weak signs | Started: journey map screen built with sample data |
+| **3 — Culture** | Scenario-based challenges (sari-sari store, jeepney, fiesta), community-reviewed content | Planned |
+| **4 — Reach** | Offline PWA support, performance for low-end devices, educator/classroom tools | Planned |
+| **Future** | Exploring camera-based sign practice feedback | Exploring |
 
 ## The Name
 

@@ -8,7 +8,16 @@ Kawika is tested at three layers. Run all of them before opening a pull request.
 | Client units | Vitest | `client/src/**/*.test.ts` | `cd client && npm test` |
 | End-to-end UAT | Playwright + axe-core | `client/e2e/` | `cd client && npm run test:e2e` |
 
-Also run `npm run lint` and `npm run build` in `client/`.
+Also run `npx tsc -b`, `npm run lint`, and `npm run build` in `client/`, and `kawika db -d test check` in `server/`.
+
+## Prerequisites
+
+| Needed for | Requirement |
+| ---------- | ----------- |
+| Server tests | PostgreSQL running, `TEST_DATABASE_URL` in `server/.env` pointing at a database whose name ends in `_test`, and `pip install -r requirements-dev.txt` |
+| Client unit tests | `npm install` |
+| End-to-end tests | Everything above, plus `npx playwright install chromium` once. Ports 8010 and 5180 must be free. The suite starts its own servers, so your `fastapi dev` and `npm run dev` can keep running. |
+| Live password breach check | Internet access (one registration scenario calls Have I Been Pwned) |
 
 ## Server tests
 

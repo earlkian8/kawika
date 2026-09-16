@@ -4,7 +4,7 @@
 
 Kawika turns learning FSL into short, rewarding daily sessions. Instead of long lectures, learners complete bite-sized **micro quests** — a handful of signs, a quick recognition drill, a scenario set in a familiar Filipino setting — and build streaks, earn XP, and unlock new regions of the journey as they progress.
 
-> **Status:** Early development. Accounts (register, log in, sessions) and the home journey screen are built; lessons and progress data are next. See [docs/about.md](docs/about.md) for the vision and roadmap.
+> **Status:** Early development. Secure accounts (register, log in, sessions), the home journey screen (sample data), PostgreSQL with migrations, and the `kawika` management CLI are built. Lessons and real progress data are next. See [docs/about.md](docs/about.md) for the vision and roadmap.
 
 ---
 
@@ -70,6 +70,7 @@ fastapi dev app/main.py       # http://localhost:8000
 # 3. Frontend (second terminal)
 cd client
 npm install
+npx playwright install chromium   # once, for end-to-end tests
 npm run dev                   # http://localhost:5173
 ```
 
@@ -97,6 +98,7 @@ Full instructions and troubleshooting: **[docs/setup.md](docs/setup.md)**.
 | `client/` | `npm run lint` | ESLint |
 | `client/` | `npm test` | Unit tests |
 | `client/` | `npm run test:e2e` | End-to-end UAT suite (starts its own API and web server) |
+| `client/` | `npm run preview` | Serve the production build with security headers |
 | `server/` | `fastapi dev app/main.py` | API with auto-reload |
 | `server/` | `kawika db migrate` | Apply database migrations |
 | `server/` | `kawika db fresh --seed` | Wipe, rebuild, and add demo data |
@@ -107,6 +109,13 @@ Full instructions and troubleshooting: **[docs/setup.md](docs/setup.md)**.
 ## Contributing
 
 Contributions are welcome — especially from members of the Deaf community, FSL interpreters, and educators. Please open an issue to discuss a change before submitting a pull request.
+
+Before opening a pull request:
+
+1. Follow the folder and naming conventions in [docs/architecture.md](docs/architecture.md).
+2. Add tests, and run every layer in [docs/testing.md](docs/testing.md) (server, client units, end-to-end).
+3. Update the affected docs in `docs/` and the READMEs.
+4. For schema changes, include the reviewed migration (`kawika db make-migration`).
 
 ## Acknowledgments
 

@@ -363,9 +363,8 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
-# Local SQLite databases
-*.sqlite3
-*.sqlite3-*
-
 # Local commit message drafts (kept out of version control)
 commit-messages/
+
+# Local working agreement for how changes are implemented
+IMPLEMENTATION-METHOD.md

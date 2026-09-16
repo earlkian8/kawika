@@ -64,6 +64,15 @@ Limits are in-memory (single process). Use Redis before scaling out.
 
 Also: a Host header allowlist, CORS limited to known origins, methods, and headers, API docs disabled in production, and startup refused with a weak `SECRET_KEY` or insecure cookies in production.
 
+## Seed data and management commands
+
+- Seeded demo accounts (`demo`, `demo_mentor`) and sample learners have **published passwords** and use `example.com` emails. Their seeders are restricted to development and test, and never run in production, even with `--force`.
+- `kawika db fresh`, `reset`, and `rollback` refuse the production database without `--force`, check this before opening a connection, and prompt for confirmation elsewhere.
+- CLI output shows `user@host:port/database` only, and tracebacks never include local variables, so `DATABASE_URL` is not leaked into terminals or CI logs.
+- The test target must be a database whose name ends in `_test`.
+
+See [Management CLI](cli.md).
+
 ## Known gaps (planned)
 
 - **Email verification and password reset** are not built yet. Until verification exists, registration reveals whether an email is already in use.

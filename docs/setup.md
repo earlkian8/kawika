@@ -73,8 +73,11 @@ In a second terminal:
 ```bash
 cd client
 npm install
+npx playwright install chromium    # once: browser for the end-to-end tests
 npm run dev                        # http://localhost:5173
 ```
+
+On a fresh Linux machine, use `npx playwright install --with-deps chromium` to also install the system libraries Chromium needs.
 
 The client needs no `.env` in development. Vite proxies `/api` to `http://localhost:8000`, so the browser sees one origin and the session cookie stays first-party. To point at another API, set `VITE_API_PROXY`.
 
@@ -87,7 +90,8 @@ The client needs no `.env` in development. Vite proxies `/api` to `http://localh
 | `npm run preview` | Serve the production build with production security headers |
 | `npm run lint` | ESLint |
 | `npm test` | Unit tests (Vitest) |
-| `npm run test:e2e` | End-to-end UAT suite (Playwright), see [Testing](testing.md) |
+| `npm run test:e2e` | End-to-end UAT suite (Playwright). Needs the server venv and `kawika_test`; see [Testing](testing.md) |
+| `npm run test:e2e:report` | Open the last end-to-end HTML report |
 
 ## 5. Running everything
 
