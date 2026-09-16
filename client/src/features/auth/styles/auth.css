@@ -1,0 +1,77 @@
+/* Auth forms: layout, password meter, error banner. */
+
+.auth-form {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.auth-form .btn {
+  margin-top: 0.5rem;
+}
+
+.auth-form__tip {
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--mangga);
+  border-radius: 4px var(--radius-sm) var(--radius-sm) 4px;
+  background: var(--mangga-tint);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.auth-form__tip q {
+  font-weight: 700;
+  quotes: '“' '”';
+}
+
+.meter {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+}
+
+.meter__track {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--capiz-2);
+  overflow: hidden;
+}
+
+.meter__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.meter__goal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 30%;
+  width: 2px;
+  background: var(--capiz);
+}
+
+.meter__label {
+  font-size: 0.875rem;
+}
+
+.form-alert {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  overflow: hidden;
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--gumamela);
+  border-radius: var(--radius-md);
+  background: var(--gumamela-tint);
+  color: var(--gumamela-deep);
+  font-weight: 600;
+}
+
+.form-alert svg {
+  flex: none;
+  margin-top: 1px;
+}

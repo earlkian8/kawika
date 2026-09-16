@@ -1,0 +1,313 @@
+/* Learner progress: stats, streak, daily quests, league. */
+
+/* Stats bar -------------------------------------------------------------- */
+
+.stats {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 88;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat--streak {
+  color: var(--gumamela-deep);
+}
+
+.stat--streak svg {
+  color: var(--gumamela);
+}
+
+.stat--xp {
+  color: var(--tinta);
+}
+
+.stat--xp svg {
+  color: var(--mangga-deep);
+  fill: var(--mangga);
+}
+
+.stat--perlas {
+  color: var(--bughaw);
+}
+
+/* Rail blocks ------------------------------------------------------------ */
+
+.rail-block h2 {
+  font-size: 1.35rem;
+  font-weight: 820;
+  font-variation-settings: 'wdth' 84;
+}
+
+.rail-block__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.rail-block__aside {
+  color: var(--tinta-soft);
+  font-size: 0.85rem;
+}
+
+/* Streak ----------------------------------------------------------------- */
+
+.streak {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  background: var(--gumamela);
+  color: var(--white);
+  box-shadow: 0 5px 0 var(--gumamela-deep);
+}
+
+.streak h2 {
+  font-size: 1.6rem;
+}
+
+.streak p {
+  font-size: 0.92rem;
+}
+
+.streak__flame {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--mangga);
+}
+
+.streak__flame svg {
+  fill: var(--mangga);
+  stroke: #fff3d6;
+}
+
+.streak__week {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.streak__day {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.streak__day abbr {
+  text-decoration: none;
+}
+
+.streak__day--done {
+  background: var(--mangga);
+  color: var(--tinta);
+}
+
+.streak__day--today {
+  border: 2px dashed rgba(255, 255, 255, 0.9);
+  background: transparent;
+}
+
+.streak__day--ahead {
+  opacity: 0.7;
+}
+
+/* Daily quests ----------------------------------------------------------- */
+
+.daily {
+  padding: 1.25rem;
+  border: 2px solid var(--capiz-line);
+  border-bottom-width: 4px;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+}
+
+.daily__list {
+  display: grid;
+  gap: 1rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.daily__item {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.9rem;
+}
+
+.daily__body {
+  flex: 1;
+}
+
+.daily__body p {
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.daily__bar {
+  position: relative;
+  height: 20px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--capiz-2);
+}
+
+.daily__bar span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--mangga);
+}
+
+.daily__bar em {
+  position: relative;
+  display: block;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+}
+
+.daily__item--done .daily__bar span {
+  background: var(--dahon);
+}
+
+.daily__item--done .daily__bar em {
+  color: var(--white);
+}
+
+.daily__chest {
+  flex: none;
+  color: var(--mangga-deep);
+}
+
+.daily__item--done .daily__chest {
+  color: var(--dahon);
+}
+
+/* League ----------------------------------------------------------------- */
+
+.league {
+  position: relative;
+  overflow: hidden;
+  padding: 1.25rem 1.25rem 1.9rem;
+  border-radius: var(--radius-lg);
+  background: var(--tinta);
+  color: var(--capiz);
+}
+
+.league::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 10px;
+  background-color: var(--mangga);
+  background-image:
+    repeating-linear-gradient(45deg, var(--tinta) 0 5px, transparent 5px 10px),
+    repeating-linear-gradient(-45deg, var(--gumamela) 0 5px, transparent 5px 10px);
+}
+
+.league .rail-block__aside {
+  color: rgba(243, 241, 250, 0.7);
+}
+
+.league__goal {
+  margin: 0.35rem 0 1rem;
+  color: rgba(243, 241, 250, 0.8);
+  font-size: 0.9rem;
+}
+
+.league__table {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.league__row {
+  display: grid;
+  grid-template-columns: 1.75rem 1fr auto;
+  align-items: center;
+  padding: 0.5rem 0.65rem;
+  border-radius: 10px;
+}
+
+.league__rank {
+  color: var(--mangga);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.league__xp {
+  color: rgba(243, 241, 250, 0.75);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.league__row--you {
+  background: var(--bughaw);
+  font-weight: 700;
+}
+
+.league__row--you .league__rank,
+.league__row--you .league__xp {
+  color: var(--white);
+}
+
+/* Responsive ------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+  .stat {
+    padding-inline: 0.4rem;
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .stats {
+    gap: 0;
+  }
+
+  .stat {
+    gap: 0.2rem;
+    padding-inline: 0.3rem;
+    font-size: 1rem;
+  }
+
+  .stat svg {
+    width: 20px;
+    height: 20px;
+  }
+}

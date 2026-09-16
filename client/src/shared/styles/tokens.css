@@ -1,0 +1,41 @@
+@import '@fontsource-variable/anybody/standard.css';
+@import '@fontsource-variable/atkinson-hyperlegible-next/index.css';
+
+/* Design tokens. Palette: colours of a barrio fiesta rather than a literal flag. */
+:root {
+  --tinta: #1d1846; /* indigo ink: text, dark surfaces */
+  --tinta-2: #2c2663;
+  --tinta-soft: #5b5680;
+  --capiz: #f3f1fa; /* pearl of a capiz window: page base */
+  --capiz-2: #e6e2f3;
+  --capiz-line: #d6d1ea;
+  --bughaw: #2f4be0; /* action */
+  --bughaw-deep: #1f35b3;
+  --bughaw-tint: #e3e8ff;
+  --mangga: #ffb627; /* XP, reward */
+  --mangga-deep: #d98e00;
+  --mangga-tint: #fff1d1;
+  --gumamela: #cc2a50; /* streak, errors (5.2:1 with white) */
+  --gumamela-deep: #9e1a3a;
+  --gumamela-tint: #fde4ea;
+  --dahon: #0b7f54; /* success, completed (5.0:1 with white) */
+  --dahon-deep: #075c3c;
+  --dahon-tint: #dcf3e9;
+  --white: #ffffff;
+
+  --font-display: 'Anybody Variable', 'Arial Narrow', sans-serif;
+  --font-body: 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
+
+  /* Type scale: 1.25 ratio on a 16px base. */
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5625rem;
+  --step-3: 1.953rem;
+  --step-4: 2.441rem;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

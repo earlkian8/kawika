@@ -1,0 +1,258 @@
+/* Signed-in app shell: navigation, top bar, content area. */
+
+/* Keep focused and scrolled-to elements clear of the sticky top bar
+   (and the bottom nav on small screens). WCAG 2.2 "Focus Not Obscured". */
+html:has(.shell) {
+  scroll-padding-block: 88px 24px;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 252px minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'nav top'
+    'nav content';
+  min-height: 100dvh;
+}
+
+.shell__content {
+  grid-area: content;
+  min-width: 0;
+}
+
+.shell__content:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--tinta);
+  color: var(--capiz);
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Navigation ------------------------------------------------------------- */
+
+.nav {
+  grid-area: nav;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100dvh;
+  padding: 1.5rem 1rem;
+  border-right: 2px solid var(--capiz-line);
+}
+
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 2rem 0.5rem;
+  color: var(--tinta);
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 850;
+  font-variation-settings: 'wdth' 86;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.nav__list {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.65rem 0.85rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--tinta-soft);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav__item[aria-current='page'] {
+  border-color: #b9c4ff;
+  background: var(--bughaw-tint);
+  color: var(--bughaw-deep);
+}
+
+.nav__item[aria-disabled='true'] {
+  cursor: default;
+  color: #6f6a92;
+}
+
+.nav__text {
+  display: grid;
+  line-height: 1.2;
+}
+
+.nav__text small {
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.nav__soon {
+  margin-left: auto;
+  padding: 0.1rem 0.45rem;
+  border-radius: 6px;
+  background: var(--capiz-2);
+  color: var(--tinta-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* Top bar ---------------------------------------------------------------- */
+
+.topbar {
+  grid-area: top;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0.85rem 2rem;
+  background: rgba(243, 241, 250, 0.96);
+  backdrop-filter: blur(12px);
+}
+
+.topbar__brand {
+  display: none;
+}
+
+/* Responsive ------------------------------------------------------------- */
+
+@media (max-width: 1240px) {
+  .shell {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .nav {
+    padding-inline: 0.75rem;
+  }
+
+  .nav__brand {
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .nav__brand span,
+  .nav__soon {
+    display: none;
+  }
+
+  /* Icon-only rail: labels stay available to screen readers. */
+  .nav__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .nav__item {
+    justify-content: center;
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 920px) {
+  html:has(.shell) {
+    scroll-padding-block: 80px 96px;
+  }
+
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'top'
+      'content';
+  }
+
+  .nav {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 30;
+    height: auto;
+    padding: 0.35rem 0.5rem calc(0.35rem + env(safe-area-inset-bottom));
+    border-top: 2px solid var(--capiz-line);
+    border-right: 0;
+    background: var(--white);
+  }
+
+  .nav__brand {
+    display: none;
+  }
+
+  .nav__list {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .nav__list > li {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .nav__item {
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.4rem 0.25rem;
+  }
+
+  .nav__text {
+    position: static;
+    display: grid;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    overflow: hidden;
+    clip-path: none;
+    font-size: 0.72rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nav__text small {
+    display: none;
+  }
+
+  .topbar {
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+  }
+
+  .topbar__brand {
+    display: block;
+    line-height: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .topbar {
+    gap: 0.5rem;
+    padding-inline: 0.5rem;
+  }
+
+  .topbar__brand {
+    display: none;
+  }
+}

@@ -1,0 +1,10 @@
+[project]
+name = "kawika-server"
+version = "0.1.0"
+description = "Kawika API: FastAPI backend for a gamified Filipino Sign Language platform."
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -p no:cacheprovider"
+filterwarnings = ["ignore::DeprecationWarning"]

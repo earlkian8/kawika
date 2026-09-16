@@ -4,7 +4,7 @@
 
 Kawika turns learning FSL into short, rewarding daily sessions. Instead of long lectures, learners complete bite-sized **micro quests** — a handful of signs, a quick recognition drill, a scenario set in a familiar Filipino setting — and build streaks, earn XP, and unlock new regions of the journey as they progress.
 
-> **Status:** Early development. The project is scaffolded; most features below are planned. See [ABOUT.md](ABOUT.md) for the vision and roadmap.
+> **Status:** Early development. Accounts (register, log in, sessions) and the home journey screen are built; lessons and progress data are next. See [docs/about.md](docs/about.md) for the vision and roadmap.
 
 ---
 
@@ -23,56 +23,83 @@ Filipino Sign Language is the national sign language of the Filipino Deaf commun
 
 ## Tech Stack
 
-| Layer    | Technology                                   |
-| -------- | -------------------------------------------- |
-| Frontend | React 19, TypeScript, Vite                   |
-| Backend  | Python 3.12, FastAPI, Uvicorn                |
-| Tooling  | ESLint, typescript-eslint                    |
+| Layer    | Technology |
+| -------- | ---------- |
+| Frontend | React 19, TypeScript, Vite, React Router, Motion, Lucide |
+| Backend  | Python 3.12, FastAPI, SQLAlchemy 2.0, Alembic, Argon2 |
+| Database | PostgreSQL 16 |
+| Testing  | pytest, Vitest, Playwright, axe-core |
+| Tooling  | ESLint, typescript-eslint |
 
 ## Project Structure
 
 ```
 kawika/
-├── client/          # React + TypeScript frontend (Vite)
-│   ├── public/
+├── client/              # React + TypeScript frontend (Vite)
+│   ├── e2e/             # Playwright end-to-end (UAT) tests
 │   └── src/
-├── server/          # FastAPI backend
-│   └── requirements.txt
-├── ABOUT.md         # Vision, mission, and roadmap
-├── SETUP.md         # Detailed local setup guide
+│       ├── app/         # App root, router, layouts
+│       ├── pages/       # Route-level screens
+│       ├── features/    # auth, journey, progress
+│       └── shared/      # API client, UI controls, brand, styles
+├── server/              # FastAPI backend
+│   ├── app/             # api, core, db, models, schemas, security, services
+│   ├── migrations/      # Alembic revisions
+│   ├── scripts/
+│   └── tests/
+├── docs/                # Project documentation
 └── README.md
 ```
 
+See [docs/architecture.md](docs/architecture.md) for conventions and how the layers depend on each other.
+
 ## Quick Start
 
-**Prerequisites:** Node.js 20+ and npm, Python 3.12+, Git.
+**Prerequisites:** Node.js 20+, Python 3.12+, PostgreSQL 16+, Git.
 
 ```bash
-git clone <repo-url> kawika
-cd kawika
+# 1. Database: create the kawika role and databases (see docs/setup.md)
 
-# Frontend
+# 2. Backend
+cd server
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements-dev.txt
+cp .env.example .env          # fill in DATABASE_URL, TEST_DATABASE_URL, SECRET_KEY
+alembic upgrade head
+fastapi dev app/main.py       # http://localhost:8000
+
+# 3. Frontend (second terminal)
 cd client
 npm install
-npm run dev          # http://localhost:5173
-
-# Backend (in a second terminal)
-cd server
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+npm run dev                   # http://localhost:5173
 ```
 
-For full instructions — including Windows commands, running the API, and troubleshooting — see **[SETUP.md](SETUP.md)**.
+Full instructions and troubleshooting: **[docs/setup.md](docs/setup.md)**.
 
-## Available Scripts (client)
+## Documentation
 
-| Command           | Description                            |
-| ----------------- | -------------------------------------- |
-| `npm run dev`     | Start the Vite dev server with HMR     |
-| `npm run build`   | Type-check and build for production    |
-| `npm run preview` | Preview the production build locally   |
-| `npm run lint`    | Run ESLint                             |
+| Doc | Topic |
+| --- | ----- |
+| [About](docs/about.md) | Mission, principles, roadmap |
+| [Setup](docs/setup.md) | Local development |
+| [Architecture](docs/architecture.md) | Structure and conventions |
+| [Backend](docs/backend.md) / [Frontend](docs/frontend.md) | Module reference |
+| [Database](docs/database.md) | Schema and migrations |
+| [Security](docs/security.md) | Authentication design |
+| [Testing](docs/testing.md) | Test layers and UAT scenarios |
+
+## Scripts
+
+| Where | Command | Description |
+| ----- | ------- | ----------- |
+| `client/` | `npm run dev` | Vite dev server with HMR |
+| `client/` | `npm run build` | Type-check and build for production |
+| `client/` | `npm run lint` | ESLint |
+| `client/` | `npm test` | Unit tests |
+| `client/` | `npm run test:e2e` | End-to-end UAT suite (starts its own API and web server) |
+| `server/` | `fastapi dev app/main.py` | API with auto-reload |
+| `server/` | `alembic upgrade head` | Apply database migrations |
+| `server/` | `pytest` | API, unit, and migration tests |
 
 ## Contributing
 
